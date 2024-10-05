@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarroka Reading</title>
+    <style>
+        body {
+            background-image: url('images/background.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            width: 175px;
+            height: 275px;
+            margin: 10px;
+            background-image: url('images/back.png');
+            background-size: cover;
+            cursor: pointer;
+            border: none;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="cardGrid">
+        <!-- Card buttons will be generated here -->
+    </div>
+    <button onclick="resetCards()">Reset</button>
+
+    <script>
+        const cardImages = [
+            'images/necromancer.png',
+            'images/evoker.png',
+            'images/miser.png',
+            'images/mists.png',
+            'images/donjon.png'
+        ];
+        
+        let flippedCards = [];
+        const grid = document.getElementById('cardGrid');
+
+        function createCard(index) {
+            const button = document.createElement('button');
+            button.className = 'card';
+            button.setAttribute('data-index', index);
+            button.onclick = () => flipCard(index);
+            grid.appendChild(button);
+        }
+
+        function flipCard(index) {
+            const card = document.querySelector(`[data-index='${index}']`);
+            if (flippedCards.length < 2 && card.style.backgroundImage.includes('back.png')) {
+                card.style.backgroundImage = `url('${cardImages[index]}')`;
+                flippedCards.push(index);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const firstCard = flippedCards[0];
+            const secondCard = flippedCards[1];
+
+            if (firstCard !== secondCard) {
+                // Logic for checking if they match goes here (for now, we'll just reset)
+                resetCards();
+            }
+            flippedCards = [];
+        }
+
+        function resetCards() {
+            flippedCards = [];
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.style.backgroundImage = "url('images/back.png')";
+            });
+        }
+
+        // Create cards on page load
+        window.onload = function() {
+            for (let i = 0; i < cardImages.length; i++) {
+                createCard(i);
+            }
+        };
+    </script>
+</body>
+</html>
